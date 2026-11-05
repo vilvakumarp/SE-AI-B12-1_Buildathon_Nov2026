@@ -1,6 +1,6 @@
 # AI Customer Support Desk
 
-A customer-support demo for the Social Eagle AI Engineering assignment. The normal workflow is:
+A customer-support demo for the Social Eagle AI Engineering assignment. It provides a Streamlit customer chat, evidence-aware complaint handling, an admin ticket console, and a persistent document-grounded knowledge base. The normal workflow is:
 
 `Customer message → Query Agent → BM25/ChromaDB Knowledge Agent → Resolution Agent → Senior Editor → Customer response`
 
@@ -51,7 +51,7 @@ For this assignment, the demo customer profiles and passwords are hardcoded in t
 5. The Knowledge Base Agent searches the indexed documents using BM25 retrieval and the persistent ChromaDB knowledge base. Only relevant passages are passed forward. Source document names remain visible in their original form.
 6. The Resolution Agent drafts a concise, grounded answer. It asks focused clarification questions when the requirement is unclear and requests proportionate evidence: payment screenshots, product photos/bills, or order/refund proof when applicable.
 7. The Senior Editor reviews the draft against the complaint, evidence, and language. It removes policy dumping, irrelevant content, unsupported promises, literal translations, and unrelated chat content. Responses are restricted to Tamil, English, or Tanglish.
-8. The customer can select “Raise complaint from this chat”. The Senior Editor reviews the complete current conversation—not only the last message—and creates a crisp complaint summary.
+8. When the customer provides a sufficiently specific complaint, the workflow automatically opens the complaint-review popup after the support response. The customer does not need to manually start a separate complaint page. The Senior Editor reviews the complete current conversation—not only the last message—and creates a crisp complaint summary. Incomplete messages remain in chat and receive a clarification question.
 9. The complaint summary and supporting documents appear in a review popup. The customer can edit, cancel, or confirm. No ticket is created before confirmation.
 10. After confirmation, the Log Agent records the ticket, status, customer, category, urgency, sentiment, response, source documents, escalation reason, and updates. The default complaint status is Open.
 11. The customer receives the ticket number and can track status, sentiment, support updates, comments, and compressed evidence. Admins can update status to Open, In Progress, Closed, Rejected, or Cancelled and add customer-visible comments.
@@ -78,8 +78,8 @@ flowchart TD
     N --> O[Resolution Agent drafts grounded response]
     O --> P[Senior Editor reviews language, relevance and policy grounding]
     P --> Q[Customer response + original source name]
-    Q --> R{Raise complaint?}
-    R -->|No| B
+    Q --> R{Specific complaint detected?}
+    R -->|No or incomplete| B
     R -->|Yes| S[Senior Editor reviews full chat context]
     S --> T[Complaint summary + supporting evidence popup]
     T --> U{Customer confirmation}
@@ -127,7 +127,7 @@ Choose `Admin knowledge base` in the sidebar and enter the assignment demo passw
 - Customer responses display the source document names used for the answer.
 - Escalation for high urgency, angry sentiment, missing evidence, legal/fraud/payment disputes, or low confidence.
 - CSV ticket log with all required assignment columns.
-- Normal chat is stored as conversation history; a complaint ticket is created only after the customer confirms the complaint summary.
+- Normal chat is stored as conversation history; a specific complaint automatically opens the review step, but a ticket is created only after the customer confirms the complaint summary.
 - Guardrails for input size, output size, API timeout, retry count, maximum agent calls, and structured-output validation.
 - All ticket timestamps and date-sensitive prompts use current `Asia/Kolkata` time (IST), not model training dates or host timezone.
 - Offline evaluation cases with category and escalation accuracy in `evaluation_results.csv`.
