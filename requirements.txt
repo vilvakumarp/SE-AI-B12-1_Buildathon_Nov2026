@@ -1,0 +1,17 @@
+autogen-agentchat>=0.4
+autogen-ext[openai]>=0.4
+openai>=1.0
+streamlit>=1.39
+python-dotenv>=1.0
+pandas>=2.0
+plotly>=5.24
+python-docx>=1.1
+pypdf>=5.0
+Pillow>=10.0
+openpyxl>=3.1
+beautifulsoup4>=4.12
+requests>=2.32
+chromadb>=0.5
+sentence-transformers>=3.0
+langsmith>=0.2
+pytest>=8.0

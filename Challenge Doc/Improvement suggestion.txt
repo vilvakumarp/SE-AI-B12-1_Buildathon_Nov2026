@@ -1,0 +1,15 @@
+What is good
+"1. '1 - extract_agrisnet.py' walks all four cascading AGRISNET dropdowns with Playwright and records department, scheme, input type, component and source URL, logging failed combinations.
+ 2. document_loader.load_documents turns each scraped record into labelled text and keeps scheme, department, input_type, component and record_id as chunk metadata for display and deduplication.
+ 3. rag_pipeline.answer_question abstains with a language-specific fallback when the best FAISS distance exceeds MAX_FAISS_DISTANCE, instead of letting the LLM guess from weak evidence.
+ 4. guardrails.citations_valid checks that every [Source N] marker matches a supplied source, and strip_invalid_citations removes fake ones and adds an unverified warning to the answer.
+ 5. The same answer_question is served by both main_app.py's chat with history and diagnostics and by api.py's typed FastAPI /ask endpoint, which also passes the conversation history."
+
+
+
+What needs to improve
+"1. _query_variants only adds hard-coded keyword expansions for pumps, machinery, documents and eligibility; replace them with BM25 plus dense fusion or LLM query rewriting for any topic.
+ 2. The extractor writes to ./agrisnet_data, but document_loader and scheme_catalog read data/raw/agrisnet_schemes.json; align these paths and remove the hardcoded D:\ path in the validator.
+ 3. main_app.py sends the language as 'தமிழ்' while _fallback checks for 'Tamil', so Tamil users get English abstentions; map the selectbox labels to the internal language codes.
+ 4. There is no evaluation code; build a labelled question set and measure hit-rate@8, citation accuracy and abstention correctness against the distance threshold, saving results to a CSV.
+ 5. playwright is used by the extractor but missing from requirements.txt, and filenames such as '2 build_knowledge_base.py' cannot be imported; add the dependency and rename the scripts."
